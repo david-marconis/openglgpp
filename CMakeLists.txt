@@ -7,6 +7,6 @@ include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 
 include_directories(src)
-set(PROJECT_MAIN "${CMAKE_CURRENT_SOURCE_DIR}/src/translate.cpp")
+set(PROJECT_MAIN "${CMAKE_CURRENT_SOURCE_DIR}/src/${MAIN_CLASS}")
 add_executable(openglcpp ${PROJECT_MAIN})
 target_link_libraries(openglcpp ${CONAN_LIBS})
