@@ -1,7 +1,11 @@
+#pragma once
+
 #include <stdio.h>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+
+#include "input.hpp"
 
 class WindowManager
 {
@@ -12,11 +16,13 @@ class WindowManager
     GLint height;
 
 public:
+    Input *input;
+
     WindowManager(GLint windowWidth, GLint windowHeight) : width(windowWidth), height(windowHeight){};
     ~WindowManager();
     int init();
-    int getBufferWidth() { return bufferHeight; }
-    int getBufferHeight() { return bufferWidth; }
+    int getBufferWidth() { return bufferWidth; }
+    int getBufferHeight() { return bufferHeight; }
     bool shouldClose() { return glfwWindowShouldClose(window); }
     void swapBuffers() { glfwSwapBuffers(window); }
 };

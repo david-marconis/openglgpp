@@ -1,3 +1,5 @@
+#pragma once
+
 #include <stdio.h>
 #include <string>
 #include <iostream>
@@ -10,6 +12,7 @@ class Shader
     GLuint shaderId;
     GLuint uniformProjection;
     GLuint uniformModel;
+    GLuint uniformView;
 
     void compileShader(const char *vertexCode, const char *fragmentCode);
     void addShader(const char *shaderSource, GLenum shaderType);
@@ -22,6 +25,7 @@ public:
     std::string readFile(const char *filename);
     GLuint getProjectionLocation();
     GLuint getModelLocation();
+    GLuint getViewLocation();
     void useShader();
     void clearShader();
 };

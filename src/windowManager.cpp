@@ -47,7 +47,11 @@ int WindowManager::init()
         glfwTerminate();
         return 0;
     }
-
+    input = new Input();
+    glfwSetWindowUserPointer(window, input);
+    glfwSetKeyCallback(window, Input::keyCallback);
+    glfwSetCursorPosCallback(window, Input::mouseCallback);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwGetFramebufferSize(window, &bufferWidth, &bufferHeight);
     glViewport(0, 0, bufferWidth, bufferHeight);
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
