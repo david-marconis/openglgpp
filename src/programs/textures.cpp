@@ -15,7 +15,7 @@
 #include "shader.hpp"
 #include "windowManager.hpp"
 #include "camera.hpp"
-#include "texture.h"
+#include "texture.hpp"
 
 const float toRadians = M_PI / 180.0f;
 

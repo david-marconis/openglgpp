@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "texture.h"
+#include "texture.hpp"
 
 void Texture::loadTexture()
 {
