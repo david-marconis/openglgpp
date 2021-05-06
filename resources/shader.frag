@@ -4,9 +4,16 @@ in vec2 textureCoordinate;
 
 out vec4 color;
 
-uniform sampler2D textureSampler;
+struct DirectionalLight {
+    vec3 color;
+    float ambientIntensity;
+};
 
-void main()
-{
-	color = texture(textureSampler, textureCoordinate);
+uniform sampler2D textureSampler;
+uniform DirectionalLight directionalLight;
+
+void main() {
+    vec4 ambientColor = vec4(directionalLight.color, 1.0f) * directionalLight.ambientIntensity;
+
+    color = texture(textureSampler, textureCoordinate) * ambientColor;
 }
