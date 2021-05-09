@@ -25,9 +25,13 @@ void Mesh::createMesh(
     glVertexArrayAttribFormat(vao, 1, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 3);
     glVertexArrayAttribBinding(vao, 1, 0);
 
+    glEnableVertexArrayAttrib(vao, 2);
+    glVertexArrayAttribFormat(vao, 2, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5);
+    glVertexArrayAttribBinding(vao, 2, 0);
+
     glCreateBuffers(1, &vbo);
     glNamedBufferData(vbo, sizeof(GLfloat) * vertexCount, vertices, GL_STATIC_DRAW);
-    glVertexArrayVertexBuffer(vao, 0, vbo, 0, sizeof(GLfloat) * 5);
+    glVertexArrayVertexBuffer(vao, 0, vbo, 0, sizeof(GLfloat) * 8);
 
     glCreateBuffers(1, &ibo);
     glNamedBufferData(ibo, sizeof(unsigned int) * indexCount, indices, GL_STATIC_DRAW);

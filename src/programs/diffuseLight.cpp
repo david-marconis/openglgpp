@@ -26,6 +26,51 @@ static const char *fragmentShader = "resources/shader.frag";
 std::vector<Mesh *> meshList;
 std::vector<Shader *> shaders;
 
+void calculateAverageNormals(
+    unsigned int *indices,
+    unsigned int indexCount,
+    GLfloat *vertices,
+    unsigned int vertexCount,
+    unsigned int vertexLength,
+    unsigned int normalOffset)
+{
+    for (size_t i = 0; i < indexCount; i += 3)
+    {
+        unsigned int in[3];
+        for (size_t j = 0; j < 3; j++)
+        {
+            in[j] = indices[i + j] * vertexLength;
+        }
+
+        glm::vec3 v1(0.0f);
+        glm::vec3 v2(0.0f);
+        for (size_t j = 0; j < 3; j++)
+        {
+            v1[j] = vertices[in[1] + j] - vertices[in[0] + j];
+            v2[j] = vertices[in[2] + j] - vertices[in[0] + j];
+        }
+
+        glm::vec3 normal = glm::normalize(glm::cross(v1, v2));
+
+        for (size_t j = 0; j < 3; j++)
+        {
+            vertices[in[0] + normalOffset + j] += normal[j];
+            vertices[in[1] + normalOffset + j] += normal[j];
+            vertices[in[2] + normalOffset + j] += normal[j];
+        }
+    }
+
+    for (size_t i = 0; i < vertexCount / vertexLength; i++)
+    {
+        unsigned int nOffset = i * vertexLength + normalOffset;
+        glm::vec3 vec(vertices[nOffset], vertices[nOffset + 1], vertices[nOffset + 2]);
+        vec = glm::normalize(vec);
+        vertices[nOffset] = vec.x;
+        vertices[nOffset + 1] = vec.y;
+        vertices[nOffset + 2] = vec.z;
+    }
+}
+
 void initObjects()
 {
     unsigned int indices[] = {
@@ -35,17 +80,21 @@ void initObjects()
         0, 1, 2};
 
     GLfloat vertices[] = {
-        -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-        0.0f, -1.0f, 1.0f, 0.5f, 0.0f,
-        1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-        0.0f, 1.0f, 0.0f, 0.5f, 1.0f};
+        -1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+        0.0f, -1.0f, 1.0f, 0.5f, 0.0f, 0.0f, 0.0f, 0.0f,
+        1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+        0.0f, 1.0f, 0.0f, 0.5f, 1.0f, 0.0f, 0.0f, 0.0f};
+
+    unsigned int vertexCount = 32;
+    unsigned int indexCount = 12;
+    calculateAverageNormals(indices, indexCount, vertices, vertexCount, 8, 5);
 
     Mesh *mesh = new Mesh();
-    mesh->createMesh(vertices, indices, 20, 12);
+    mesh->createMesh(vertices, indices, vertexCount, indexCount);
     meshList.push_back(mesh);
 
     Mesh *mesh2 = new Mesh();
-    mesh2->createMesh(vertices, indices, 20, 12);
+    mesh2->createMesh(vertices, indices, vertexCount, indexCount);
     meshList.push_back(mesh2);
 }
 
@@ -70,7 +119,11 @@ int main()
     Texture dirt = Texture("resources/dirt.png");
     dirt.loadTexture();
 
-    Light directionalLight = Light();
+    Light directionalLight = Light(
+        glm::vec3(1.0f, 1.0f, 1.0f),
+        glm::vec3(2.0f, -1.0f, -2.0f),
+        0.3f,
+        1.0f);
 
     GLfloat aspectRatio = (GLfloat)windowManager.getBufferWidth() /
                           (GLfloat)windowManager.getBufferHeight();
@@ -80,6 +133,8 @@ int main()
     GLuint uniformView = 0;
     GLuint uniformAmbientIntensity = 0;
     GLuint uniformAmbientColor = 0;
+    GLuint uniformDiffuseIntensity = 0;
+    GLuint uniformDirection = 0;
 
     GLfloat deltaTime = 0.0f;
     GLfloat lastTime = 0.0f;
@@ -100,8 +155,14 @@ int main()
         uniformView = shaders[0]->getViewLocation();
         uniformAmbientIntensity = shaders[0]->getAmbientIntensityLocation();
         uniformAmbientColor = shaders[0]->getAmbientColorLocation();
+        uniformDiffuseIntensity = shaders[0]->getDiffuseIntensityLocation();
+        uniformDirection = shaders[0]->getDirectionLocation();
 
-        directionalLight.useLight(uniformAmbientIntensity, uniformAmbientColor, 0, 0);
+        directionalLight.useLight(
+            uniformAmbientColor,
+            uniformDirection,
+            uniformAmbientIntensity,
+            uniformDiffuseIntensity);
 
         glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
         glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));

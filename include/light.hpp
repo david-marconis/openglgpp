@@ -9,10 +9,22 @@ class Light
     glm::vec3 color;
     GLfloat ambientIntensity;
 
+    glm::vec3 direction;
+    GLfloat diffuseIntensity;
+
 public:
     Light();
     ~Light(){};
 
-    Light(GLfloat red, GLfloat green, GLfloat blue, GLfloat ambientIntensity);
-    void useLight(GLfloat ambientIntensityLocation, GLfloat ambientColorLocation);
+    Light(
+        glm::vec3 color,
+        glm::vec3 direction,
+        GLfloat ambientIntensity,
+        GLfloat diffuseIntensity);
+
+    void useLight(
+        GLuint colorLocation,
+        GLuint directionLocation,
+        GLuint ambientIntensityLocation,
+        GLuint diffuseIntensityLocation);
 };
