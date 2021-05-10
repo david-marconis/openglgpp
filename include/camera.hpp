@@ -35,5 +35,7 @@ public:
 
     void turn(GLfloat yaw, GLfloat pitch);
     void move(GLfloat right, GLfloat front);
+
+    glm::vec3 getCameraPosition() { return position; }
     glm::mat4 calculateViewMatrix();
 };
