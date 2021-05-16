@@ -30,7 +30,7 @@ void Camera::update()
     front = glm::normalize(front);
 
     right = glm::normalize(glm::cross(front, worldUp));
-    up = glm::normalize(cross(right, front));
+    up = glm::normalize(glm::cross(right, front));
 }
 
 void Camera::turn(GLfloat yaw, GLfloat pitch)
@@ -40,6 +40,7 @@ void Camera::turn(GLfloat yaw, GLfloat pitch)
     this->pitch = std::max(-89.0f, std::min(this->pitch, 89.0f));
     update();
 }
+
 void Camera::move(GLfloat right, GLfloat front)
 {
     position += this->front * (front * movementSpeed) +

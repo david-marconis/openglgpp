@@ -4,6 +4,7 @@
 
 class PointLight : public Light
 {
+protected:
     glm::vec3 position;
     GLfloat constant;
     GLfloat linear;

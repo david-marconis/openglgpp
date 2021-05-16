@@ -34,6 +34,15 @@ void Input::update(float deltaTime)
             movable->move(right, front);
         }
     }
+    if (xChange != 0 || yChange != 0)
+    {
+        for (Movable *movable : movables)
+        {
+            movable->turn(xChange, yChange);
+        }
+        xChange = 0.0f;
+        yChange = 0.0f;
+    }
 }
 
 void Input::keyCallback(GLFWwindow *window, int key, int scancode, int action, int mode)
@@ -75,8 +84,4 @@ void Input::mouseCallback(GLFWwindow *window, double xPos, double yPos)
     input->yChange = input->lastY - yPos;
     input->lastX = xPos;
     input->lastY = yPos;
-    for (Movable *movable : input->movables)
-    {
-        movable->turn(input->xChange, input->yChange);
-    }
 }
