@@ -19,4 +19,9 @@ public:
         glm::vec3 color,
         GLfloat ambientIntensity,
         GLfloat diffuseIntensity);
+        
+    void useLight(
+        GLuint colorLocation,
+        GLuint ambientIntensityLocation,
+        GLuint diffuseIntensityLocation);
 };

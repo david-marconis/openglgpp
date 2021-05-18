@@ -31,10 +31,8 @@ void PointLight::useLight(
     GLuint linearLocation,
     GLuint quadraticLocation)
 {
-    glUniform3f(colorLocation, color.x, color.y, color.z);
+    Light::useLight(colorLocation, ambientIntensityLocation, diffuseIntensityLocation);
     glUniform3f(positionLocation, position.x, position.y, position.z);
-    glUniform1f(ambientIntensityLocation, ambientIntensity);
-    glUniform1f(diffuseIntensityLocation, diffuseIntensity);
     glUniform1f(constantLocation, constant);
     glUniform1f(linearLocation, linear);
     glUniform1f(quadraticLocation, quadratic);

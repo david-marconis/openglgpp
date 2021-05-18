@@ -37,5 +37,6 @@ public:
     void move(GLfloat right, GLfloat front);
 
     glm::vec3 getCameraPosition() { return position; }
+    glm::vec3 getCameraDirection() { return glm::normalize(front); }
     glm::mat4 calculateViewMatrix();
 };

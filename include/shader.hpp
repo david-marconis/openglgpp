@@ -9,35 +9,46 @@
 
 #include "directionalLight.hpp"
 #include "pointLight.hpp"
+#include "spotLight.hpp"
 #include "constants.hpp"
 
 class Shader
 {
     int pointLightCount;
+    int spotLightCount;
 
-    struct
+    struct UniformLight
     {
         GLuint uniformColor;
         GLuint uniformAmbientIntensity;
         GLuint uniformDiffuseIntensity;
-        GLuint uniformDirection;
+    };
 
+    struct
+    {
+        UniformLight light;
+        GLuint uniformDirection;
     } uniformDirectionalLight;
 
-    struct
+    struct UniformPointLight
     {
-        GLuint uniformColor;
-        GLuint uniformAmbientIntensity;
-        GLuint uniformDiffuseIntensity;
-
+        UniformLight light;
         GLuint uniformPosition;
         GLuint uniformConstant;
         GLuint uniformLinear;
         GLuint uniformQuadratic;
     } uniformPointLight[MAX_POINT_LIGHTS];
 
+    struct UniformSpotLight
+    {
+        UniformPointLight pointLight;
+        GLuint uniformEdge;
+        GLuint uniformDirection;
+    } uniformSpotLight[MAX_SPOT_LIGHTS];
+
     GLuint shaderId;
     GLuint uniformPointLightCount;
+    GLuint uniformSpotLightCount;
     GLuint uniformProjection;
     GLuint uniformModel;
     GLuint uniformView;
@@ -48,6 +59,8 @@ class Shader
     GLuint getUniformArrayLocation(char *locationBuffer, const char *variable, size_t i);
     void compileShader(const char *vertexCode, const char *fragmentCode);
     void addShader(const char *shaderSource, GLenum shaderType);
+    GLuint getArrayLocation(size_t i, std::string base, std::string modifier, std::string value);
+    void setPointLightUniforms(UniformPointLight *pointLight, size_t i, std::string base, std::string modifier);
 
 public:
     Shader();
@@ -69,4 +82,5 @@ public:
     void clearShader();
     void setDirectionalLight(DirectionalLight *light);
     void setPointLights(PointLight *pointLights, unsigned int lightCount);
+    void setSpotLights(SpotLight *spotLights, unsigned int lightCount);
 };
