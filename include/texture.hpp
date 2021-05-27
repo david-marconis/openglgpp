@@ -12,11 +12,14 @@ class Texture
     int bitDepth = 0;
     const char *fileLocation;
 
+    bool loadTexture(GLenum internalFormat, GLenum format);
+
 public:
     Texture(const char *fileLocation) : fileLocation(fileLocation){};
     ~Texture();
 
-    void loadTexture();
+    bool loadTexture();
+    bool loadTextureWithAlpha();
     void useTexture();
     void clearTexture();
 };

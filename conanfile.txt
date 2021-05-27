@@ -3,5 +3,6 @@ glfw/3.3.4
 glew/2.2.0
 glm/0.9.9.8
 stb/20200203
+assimp/5.0.1
 [generators]
 cmake
