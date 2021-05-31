@@ -8,7 +8,7 @@ class Material
     GLfloat shininess;
 
 public:
-    Material();
+    Material(){};
     Material(GLfloat specularIntensity, GLfloat shininess)
         : specularIntensity(specularIntensity),
           shininess(shininess){};

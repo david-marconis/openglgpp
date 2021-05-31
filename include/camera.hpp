@@ -24,6 +24,7 @@ class Camera : public Movable
     void update();
 
 public:
+    Camera(){};
     Camera(
         glm::vec3 position,
         glm::vec3 worldUp,

@@ -3,6 +3,7 @@
 in vec2 textureCoordinate;
 in vec3 Normal;
 in vec3 FragPos;
+in vec4 DirectionalLightSpacePosition;
 
 out vec4 color;
 
@@ -47,11 +48,39 @@ uniform PointLight pointLights[MAX_POINT_LIGHTS];
 uniform SpotLight spotLights[MAX_SPOT_LIGHTS];
 
 uniform sampler2D textureSampler;
+uniform sampler2D directionalShadowMap;
+
 uniform Material material;
 
 uniform vec3 eyePosition;
 
-vec4 calculateLightByDirection(Light light, vec3 direction) {
+float calculateDirectionalShadowFactor(DirectionalLight light) {
+    vec3 projectionCoords = DirectionalLightSpacePosition.xyz / DirectionalLightSpacePosition.w;
+    projectionCoords = projectionCoords * 0.5 + 0.5;
+    float current = projectionCoords.z;
+
+    vec3 normal = normalize(Normal);
+    vec3 ligthDirection = normalize(light.direction);
+
+    float bias = max(0.05 * (1 - dot(normal, ligthDirection)), 0.005);
+
+    float shadow = 0.0;
+    vec2 texelSize = 1.0 / textureSize(directionalShadowMap, 0);
+    for(int x = -1; x <= 1; ++x) {
+        for(int y = -1; y <= 1; ++y) {
+            float pcfDepth = texture(directionalShadowMap, projectionCoords.xy + vec2(x, y) * texelSize).r;
+            shadow += current - bias > pcfDepth ? 1.0 : 0.0;
+        }
+    }
+    shadow /= 9.0;
+
+    if(projectionCoords.z > 1.0) {
+        shadow = 0.0;
+    }
+    return shadow;
+}
+
+vec4 calculateLightByDirection(Light light, vec3 direction, float shadowFactor) {
     vec4 ambientColor = vec4(light.color, 1.0f) * light.ambientIntensity;
     float diffuseFactor = max(dot(normalize(Normal), normalize(direction)), 0.0f);
     vec4 diffuseColor = vec4(light.color, 1.0f) * light.diffuseIntensity * diffuseFactor;
@@ -68,11 +97,12 @@ vec4 calculateLightByDirection(Light light, vec3 direction) {
             specularColor = vec4(light.color * material.specularIntensity * specularFactor, 1.0f);
         }
     }
-    return ambientColor + diffuseColor + specularColor;
+    return ambientColor + (1.0 - shadowFactor) * (diffuseColor + specularColor);
 }
 
 vec4 calculateDirectionalLight() {
-    return calculateLightByDirection(directionalLight.base, directionalLight.direction);
+    float shadowFactor = calculateDirectionalShadowFactor(directionalLight);
+    return calculateLightByDirection(directionalLight.base, directionalLight.direction, shadowFactor);
 }
 
 vec4 calculatePointLight(PointLight pointLight) {
@@ -80,7 +110,7 @@ vec4 calculatePointLight(PointLight pointLight) {
     float distance = length(direction);
     direction = normalize(direction);
 
-    vec4 color = calculateLightByDirection(pointLight.base, direction);
+    vec4 color = calculateLightByDirection(pointLight.base, direction, 0.0f);
     float attenuation = pointLight.quadratic * distance * distance +
         pointLight.linear * distance +
         pointLight.constant;

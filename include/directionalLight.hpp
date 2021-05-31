@@ -14,11 +14,15 @@ public:
         glm::vec3 color,
         glm::vec3 direction,
         GLfloat ambientIntensity,
-        GLfloat diffuseIntensity);
+        GLfloat diffuseIntensity,
+        GLfloat shadowWidth,
+        GLfloat shadowHeight);
 
     void useLight(
         GLuint colorLocation,
         GLuint directionLocation,
         GLuint ambientIntensityLocation,
         GLuint diffuseIntensityLocation);
+        
+    glm::mat4 calculateLightTransform();
 };

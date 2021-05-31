@@ -55,6 +55,9 @@ class Shader
     GLuint uniformEyePosition;
     GLuint uniformSpecularIntensity;
     GLuint uniformShininess;
+    GLuint uniformTexture;
+    GLuint uniformDirectionalLightTransform;
+    GLuint uniformDirectionalShadowMap;
 
     GLuint getUniformArrayLocation(char *locationBuffer, const char *variable, size_t i);
     void compileShader(const char *vertexCode, const char *fragmentCode);
@@ -83,4 +86,7 @@ public:
     void setDirectionalLight(DirectionalLight *light);
     void setPointLights(PointLight *pointLights, unsigned int lightCount);
     void setSpotLights(SpotLight *spotLights, unsigned int lightCount);
+    void setTexture(GLuint textureUnit);
+    void setDirectionalShadowMap(GLuint textureUnit);
+    void setDirectionalLightTransform(glm::mat4 *lightTransform);
 };

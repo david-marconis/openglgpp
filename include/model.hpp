@@ -22,6 +22,7 @@ class Model
     void loadMaterials(const aiScene *scene);
 
 public:
+    Model(){};
     Model(std::string modelLocation) : modelLocation(modelLocation){};
     ~Model(){};
 

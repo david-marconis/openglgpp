@@ -15,6 +15,7 @@ class Texture
     bool loadTexture(GLenum internalFormat, GLenum format);
 
 public:
+    Texture() {}
     Texture(const char *fileLocation) : fileLocation(fileLocation){};
     ~Texture();
 

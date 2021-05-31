@@ -1,3 +1,6 @@
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include "shader.hpp"
 
 Shader::Shader()
@@ -94,6 +97,10 @@ void Shader::compileShader(const char *vertexCode, const char *fragmentCode)
         spotLight->uniformDirection = getArrayLocation(i, base, "", "direction");
         spotLight->uniformEdge = getArrayLocation(i, base, "", "edge");
     }
+
+    uniformDirectionalLightTransform = glGetUniformLocation(shaderId, "directionalLightTransform");
+    uniformTexture = glGetUniformLocation(shaderId, "textureSampler");
+    uniformDirectionalShadowMap = glGetUniformLocation(shaderId, "directionalShadowMap");
 }
 
 void Shader::fromString(const char *vertexCode, const char *fragmentCode)
@@ -217,6 +224,21 @@ void Shader::setSpotLights(SpotLight *spotLights, unsigned int lightCount)
             s.pointLight.uniformQuadratic,
             s.uniformEdge);
     }
+}
+
+void Shader::setTexture(GLuint textureUnit)
+{
+    glUniform1i(uniformTexture, textureUnit);
+}
+
+void Shader::setDirectionalShadowMap(GLuint textureUnit)
+{
+    glUniform1i(uniformDirectionalShadowMap, textureUnit);
+}
+
+void Shader::setDirectionalLightTransform(glm::mat4 *lightTransform)
+{
+    glUniformMatrix4fv(uniformDirectionalLightTransform, 1, GL_FALSE, glm::value_ptr(*lightTransform));
 }
 
 GLuint Shader::getModelLocation()

@@ -10,11 +10,15 @@ Light::Light()
 Light::Light(
     glm::vec3 color,
     GLfloat ambientIntensity,
-    GLfloat diffuseIntensity)
+    GLfloat diffuseIntensity,
+    GLfloat shadowWidth,
+    GLfloat shadowHeight)
 {
     this->color = color;
     this->ambientIntensity = ambientIntensity;
     this->diffuseIntensity = diffuseIntensity;
+    this->shadowMap = new ShadowMap();
+    shadowMap->init(shadowWidth, shadowHeight);
 }
 
 void Light::useLight(
