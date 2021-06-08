@@ -18,7 +18,8 @@ public:
         glm::vec3 direction,
         GLfloat ambientIntensity, GLfloat diffuseIntensity,
         GLfloat constant, GLfloat linear, GLfloat quadratic,
-        GLfloat edge);
+        GLfloat edge,
+        GLuint shadowWidth, GLuint shadowHeight, GLfloat near, GLfloat far);
 
     void useLight(
         GLuint colorLocation,

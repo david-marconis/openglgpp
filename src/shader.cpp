@@ -24,21 +24,24 @@ GLuint Shader::getUniformArrayLocation(char *locationBuffer, const char *variabl
     return glGetUniformLocation(shaderId, locationBuffer);
 }
 
-GLuint Shader::getArrayLocation(size_t i, std::string base, std::string modifier, std::string value)
+GLuint Shader::getArrayLocation(
+    size_t i, std::string base,
+    std::string modifier = "",
+    std::string value = "")
 {
-    std::string combined = base + "[" + std::to_string(i) + "]." + modifier + value;
+    std::string combined = base + "[" + std::to_string(i) + "]" + modifier + value;
     return glGetUniformLocation(shaderId, combined.c_str());
 }
 
 void Shader::setPointLightUniforms(UniformPointLight *pointLight, size_t i, std::string base, std::string modifier)
 {
-    pointLight->light.uniformColor = getArrayLocation(i, base, modifier, "base.color");
-    pointLight->light.uniformAmbientIntensity = getArrayLocation(i, base, modifier, "base.ambientIntensity");
-    pointLight->light.uniformDiffuseIntensity = getArrayLocation(i, base, modifier, "base.diffuseIntensity");
-    pointLight->uniformPosition = getArrayLocation(i, base, modifier, "position");
-    pointLight->uniformConstant = getArrayLocation(i, base, modifier, "constant");
-    pointLight->uniformLinear = getArrayLocation(i, base, modifier, "linear");
-    pointLight->uniformQuadratic = getArrayLocation(i, base, modifier, "quadratic");
+    pointLight->light.uniformColor = getArrayLocation(i, base, modifier, ".base.color");
+    pointLight->light.uniformAmbientIntensity = getArrayLocation(i, base, modifier, ".base.ambientIntensity");
+    pointLight->light.uniformDiffuseIntensity = getArrayLocation(i, base, modifier, ".base.diffuseIntensity");
+    pointLight->uniformPosition = getArrayLocation(i, base, modifier, ".position");
+    pointLight->uniformConstant = getArrayLocation(i, base, modifier, ".constant");
+    pointLight->uniformLinear = getArrayLocation(i, base, modifier, ".linear");
+    pointLight->uniformQuadratic = getArrayLocation(i, base, modifier, ".quadratic");
 }
 
 void Shader::compileShader(const char *vertexCode, const char *fragmentCode)
@@ -51,7 +54,25 @@ void Shader::compileShader(const char *vertexCode, const char *fragmentCode)
     }
     addShader(vertexCode, GL_VERTEX_SHADER);
     addShader(fragmentCode, GL_FRAGMENT_SHADER);
+    compileProgram();
+}
 
+void Shader::compileShader(const char *vertexCode, const char *fragmentCode, const char *geometryCode)
+{
+    shaderId = glCreateProgram();
+    if (!shaderId)
+    {
+        std::cerr << "Error creating shader program!" << std::endl;
+        return;
+    }
+    addShader(vertexCode, GL_VERTEX_SHADER);
+    addShader(geometryCode, GL_GEOMETRY_SHADER);
+    addShader(fragmentCode, GL_FRAGMENT_SHADER);
+    compileProgram();
+}
+
+void Shader::compileProgram()
+{
     GLint linkSuccess = 0;
     glLinkProgram(shaderId);
     glGetProgramiv(shaderId, GL_LINK_STATUS, &linkSuccess);
@@ -93,16 +114,23 @@ void Shader::compileShader(const char *vertexCode, const char *fragmentCode)
     {
         UniformSpotLight *spotLight = &uniformSpotLight[i];
         std::string base = "spotLights";
-        setPointLightUniforms(&spotLight->pointLight, i, base, "pointLight.");
-        spotLight->uniformDirection = getArrayLocation(i, base, "", "direction");
-        spotLight->uniformEdge = getArrayLocation(i, base, "", "edge");
+        setPointLightUniforms(&spotLight->pointLight, i, base, ".pointLight");
+        spotLight->uniformDirection = getArrayLocation(i, base, "", ".direction");
+        spotLight->uniformEdge = getArrayLocation(i, base, "", ".edge");
     }
 
     uniformDirectionalLightTransform = glGetUniformLocation(shaderId, "directionalLightTransform");
     uniformTexture = glGetUniformLocation(shaderId, "textureSampler");
     uniformDirectionalShadowMap = glGetUniformLocation(shaderId, "directionalShadowMap");
-}
 
+    uniformOmniLightPosition = glGetUniformLocation(shaderId, "lightPosition");
+    uniformFarPlane = glGetUniformLocation(shaderId, "farPlane");
+
+    for (size_t i = 0; i < 6; i++)
+    {
+        uniformLightMatrices[i] = getArrayLocation(i, "lightMatrices");
+    }
+}
 void Shader::fromString(const char *vertexCode, const char *fragmentCode)
 {
     compileShader(vertexCode, fragmentCode);
@@ -152,6 +180,19 @@ void Shader::fromFile(const char *vertexFile, const char *fragmentFile)
     const char *fragmentCode = fragmentString.c_str();
 
     compileShader(vertexCode, fragmentCode);
+}
+
+void Shader::fromFile(const char *vertexFile, const char *fragmentFile, const char *geometryFile)
+{
+    std::string vertexString = readFile(vertexFile);
+    std::string fragmentString = readFile(fragmentFile);
+    std::string geometryString = readFile(geometryFile);
+
+    const char *vertexCode = vertexString.c_str();
+    const char *fragmentCode = fragmentString.c_str();
+    const char *geometryCode = geometryString.c_str();
+
+    compileShader(vertexCode, fragmentCode, geometryCode);
 }
 std::string Shader::readFile(const char *filename)
 {
@@ -241,6 +282,14 @@ void Shader::setDirectionalLightTransform(glm::mat4 *lightTransform)
     glUniformMatrix4fv(uniformDirectionalLightTransform, 1, GL_FALSE, glm::value_ptr(*lightTransform));
 }
 
+void Shader::setLightMatrices(std::vector<glm::mat4> lightMatrices)
+{
+    for (size_t i = 0; i < 6; i++)
+    {
+        glUniformMatrix4fv(uniformLightMatrices[i], 1, GL_FALSE, glm::value_ptr(lightMatrices[i]));
+    }
+}
+
 GLuint Shader::getModelLocation()
 {
     return uniformModel;
@@ -269,4 +318,14 @@ GLuint Shader::getSpecularIntensityLocation()
 GLuint Shader::getShininessLocation()
 {
     return uniformShininess;
+}
+
+GLuint Shader::getOmniLightPositionLocation()
+{
+    return uniformOmniLightPosition;
+}
+
+GLuint Shader::getFarPlaneLocation()
+{
+    return uniformFarPlane;
 }
