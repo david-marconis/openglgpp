@@ -87,7 +87,7 @@ void Model::loadMaterials(const aiScene *scene)
         }
         if (!textures[i])
         {
-            textures[i] = new Texture("resources/plain.png");
+            textures[i] = new Texture("resources/textures/plain.png");
             textures[i]->loadTextureWithAlpha();
         }
     }
