@@ -14,6 +14,7 @@ protected:
     GLfloat diffuseIntensity;
     ShadowMap *shadowMap;
     glm::mat4 lightProjection;
+    bool isOn = true;
 
 public:
     Light();
@@ -31,4 +32,5 @@ public:
         GLuint ambientIntensityLocation,
         GLuint diffuseIntensityLocation);
     ShadowMap *getShadowMap() { return shadowMap; };
+    void toggle() { isOn = !isOn; }
 };

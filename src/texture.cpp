@@ -40,7 +40,7 @@ bool Texture::loadTexture()
 
 void Texture::useTexture()
 {
-    glBindTextureUnit(0, textureId);
+    glBindTextureUnit(1, textureId);
 }
 
 void Texture::clearTexture()

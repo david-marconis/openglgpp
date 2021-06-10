@@ -46,6 +46,12 @@ class Shader
         GLuint uniformDirection;
     } uniformSpotLight[MAX_SPOT_LIGHTS];
 
+    struct
+    {
+        GLuint shadowMap;
+        GLuint farPlane;
+    } uniformOmniShadowMap[MAX_POINT_LIGHTS + MAX_SPOT_LIGHTS];
+
     GLuint shaderId;
     GLuint uniformPointLightCount;
     GLuint uniformSpotLightCount;
@@ -78,6 +84,7 @@ public:
     void fromString(const char *vertexCode, const char *fragmentCode);
     void fromFile(const char *vertexFile, const char *fragmentFile);
     void fromFile(const char *vertexFile, const char *fragmentFile, const char *geometryFile);
+    void validate();
     std::string readFile(const char *filename);
     GLuint getProjectionLocation();
     GLuint getModelLocation();
@@ -94,8 +101,8 @@ public:
     void useShader();
     void clearShader();
     void setDirectionalLight(DirectionalLight *light);
-    void setPointLights(PointLight *pointLights, unsigned int lightCount);
-    void setSpotLights(SpotLight *spotLights, unsigned int lightCount);
+    void setPointLights(PointLight *pointLights, unsigned int lightCount, GLuint textureUnit, unsigned int offset);
+    void setSpotLights(SpotLight *spotLights, unsigned int lightCount, GLuint textureUnit, unsigned int offset);
     void setTexture(GLuint textureUnit);
     void setDirectionalShadowMap(GLuint textureUnit);
     void setDirectionalLightTransform(glm::mat4 *lightTransform);

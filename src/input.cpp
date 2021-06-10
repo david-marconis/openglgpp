@@ -1,8 +1,6 @@
-#include "input.hpp"
-
 #include <algorithm>
 
-#include <GLFW/glfw3.h>
+#include "input.hpp"
 
 void Input::registerMovable(Movable *movable)
 {
@@ -61,6 +59,11 @@ void Input::keyCallback(GLFWwindow *window, int key, int scancode, int action, i
         case GLFW_KEY_ESCAPE:
             glfwSetWindowShouldClose(window, GL_TRUE);
             break;
+        case lightKey:
+            if (input->light)
+            {
+                input->light->toggle();
+            }
         default:
             break;
         }

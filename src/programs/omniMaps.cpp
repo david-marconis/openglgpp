@@ -238,14 +238,14 @@ void renderPass(glm::mat4 projectionMatrix, glm::mat4 viewMatrix)
     glUniform3f(uniformEyePosition, cameraPosition.x, cameraPosition.y, cameraPosition.z);
 
     shaders[0]->setDirectionalLight(&directionalLight);
-    shaders[0]->setPointLights(pointLights, pointLightCount);
-    shaders[0]->setSpotLights(spotLights, spotLightCount);
+    shaders[0]->setPointLights(pointLights, pointLightCount, 3, 0);
+    shaders[0]->setSpotLights(spotLights, spotLightCount, 3 + pointLightCount, pointLightCount);
     glm::mat4 directionalLightTransform = directionalLight.calculateLightTransform();
     shaders[0]->setDirectionalLightTransform(&directionalLightTransform);
 
-    directionalLight.getShadowMap()->read(1);
-    shaders[0]->setTexture(0);
-    shaders[0]->setDirectionalShadowMap(1);
+    directionalLight.getShadowMap()->read(2);
+    shaders[0]->setTexture(1);
+    shaders[0]->setDirectionalShadowMap(2);
 
     glm::vec3 lowerPos = cameraPosition - glm::vec3(0.0f, 0.3f, 0.0f);
     spotLights[0].setFlash(lowerPos, camera.getCameraDirection());
@@ -279,7 +279,7 @@ int main()
         glm::vec3(1.0f, 1.0f, 1.0f),
         glm::vec3(0.0f, -15.0f, -10.0f),
         0.1f,
-        0.6f,
+        0.3f,
         4096, 4096);
     pointLights[MAX_POINT_LIGHTS];
     spotLights[MAX_SPOT_LIGHTS];
@@ -289,7 +289,7 @@ int main()
     pointLights[0] = PointLight(
         glm::vec3(0.0f, 0.0f, 1.0f),
         glm::vec3(4.0, 0.0f, -7.0f),
-        0.1f, 0.1f,
+        0.0f, 1.0f,
         0.3f, 0.2f, 0.1f,
         1024, 1024, 0.01f, 100.0f);
     pointLightCount++;
@@ -297,7 +297,7 @@ int main()
     pointLights[1] = PointLight(
         glm::vec3(0.0f, 1.0f, 0.0f),
         glm::vec3(-4.0, 2.0f, -7.0f),
-        0.1f, 0.1f,
+        0.0f, 1.0f,
         0.3f, 0.1f, 0.1f,
         1024, 1024, 0.01f, 100.0f);
     pointLightCount++;
@@ -307,7 +307,7 @@ int main()
         glm::vec3(1.0f, 1.0f, 1.0f),
         glm::vec3(0.0, -2.0f, -7.0f),
         glm::vec3(0.0f, -1.0f, 0.0f),
-        0.1f, 1.0f,
+        0.0f, 1.0f,
         1.0f, 0.0f, 0.0f,
         10.0f,
         1024, 1024, 0.01f, 100.0f);
@@ -322,6 +322,7 @@ int main()
         20.0f,
         1024, 1024, 0.01f, 100.0f);
     spotLightCount++;
+    windowManager.input->setLight(&spotLights[0]);
 
     GLfloat aspectRatio = (GLfloat)windowManager.getBufferWidth() /
                           (GLfloat)windowManager.getBufferHeight();

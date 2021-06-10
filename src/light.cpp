@@ -27,6 +27,14 @@ void Light::useLight(
     GLuint diffuseIntensityLocation)
 {
     glUniform3f(colorLocation, color.x, color.y, color.z);
-    glUniform1f(ambientIntensityLocation, ambientIntensity);
-    glUniform1f(diffuseIntensityLocation, diffuseIntensity);
+    if (isOn)
+    {
+        glUniform1f(ambientIntensityLocation, ambientIntensity);
+        glUniform1f(diffuseIntensityLocation, diffuseIntensity);
+    }
+    else
+    {
+        glUniform1f(ambientIntensityLocation, 0);
+        glUniform1f(diffuseIntensityLocation, 0);
+    }
 }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "light.hpp"
 #include <GLFW/glfw3.h>
 
 #include "movable.hpp"
@@ -11,11 +12,13 @@ class Input
     double lastY = 0.0f;
     double xChange = 0.0f;
     double yChange = 0.0f;
+    Light *light = nullptr;
 
     static const int upKey = GLFW_KEY_W;
     static const int leftKey = GLFW_KEY_A;
     static const int downKey = GLFW_KEY_S;
     static const int rightKey = GLFW_KEY_D;
+    static const int lightKey = GLFW_KEY_F;
 
     float keyValues[1024] = {0};
 
@@ -26,5 +29,6 @@ public:
     static void mouseCallback(GLFWwindow *window, double xPos, double yPos);
     void registerMovable(Movable *movable);
     void unregisterMovable(Movable *movable);
+    void setLight(Light *light) { this->light = light; }
     void update(float deltaTime);
 };
