@@ -23,13 +23,14 @@ void Input::unregisterMovable(Movable *movable)
 void Input::update(float deltaTime)
 {
     float right = (keyValues[rightKey] - keyValues[leftKey]) * deltaTime;
-    float front = (keyValues[upKey] - keyValues[downKey]) * deltaTime;
+    float front = (keyValues[forwardsKey] - keyValues[backwardsKey]) * deltaTime;
+    float up = (keyValues[upKey] - keyValues[downKey]) * deltaTime;
 
-    if (right != 0 || front != 0)
+    if (right != 0 || front != 0 || up != 0)
     {
         for (Movable *movable : movables)
         {
-            movable->move(right, front);
+            movable->move(right, front, up);
         }
     }
     if (xChange != 0 || yChange != 0)

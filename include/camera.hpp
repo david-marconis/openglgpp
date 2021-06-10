@@ -35,7 +35,7 @@ public:
     ~Camera();
 
     void turn(GLfloat yaw, GLfloat pitch);
-    void move(GLfloat right, GLfloat front);
+    void move(GLfloat right, GLfloat front, GLfloat up);
 
     glm::vec3 getCameraPosition() { return position; }
     glm::vec3 getCameraDirection() { return glm::normalize(front); }

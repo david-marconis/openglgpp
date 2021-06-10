@@ -41,10 +41,11 @@ void Camera::turn(GLfloat yaw, GLfloat pitch)
     update();
 }
 
-void Camera::move(GLfloat right, GLfloat front)
+void Camera::move(GLfloat right, GLfloat front, GLfloat up)
 {
     position += this->front * (front * movementSpeed) +
-                this->right * (right * movementSpeed);
+                this->right * (right * movementSpeed) +
+                this->up * (up * movementSpeed);
 }
 
 glm::mat4 Camera::calculateViewMatrix()

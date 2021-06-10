@@ -14,11 +14,13 @@ class Input
     double yChange = 0.0f;
     Light *light = nullptr;
 
-    static const int upKey = GLFW_KEY_W;
+    static const int forwardsKey = GLFW_KEY_W;
     static const int leftKey = GLFW_KEY_A;
-    static const int downKey = GLFW_KEY_S;
+    static const int backwardsKey = GLFW_KEY_S;
     static const int rightKey = GLFW_KEY_D;
     static const int lightKey = GLFW_KEY_F;
+    static const int upKey = GLFW_KEY_SPACE;
+    static const int downKey = GLFW_KEY_LEFT_SHIFT;
 
     float keyValues[1024] = {0};
 
