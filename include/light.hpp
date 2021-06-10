@@ -14,7 +14,8 @@ protected:
     GLfloat diffuseIntensity;
     ShadowMap *shadowMap;
     glm::mat4 lightProjection;
-    bool isOn = true;
+    glm::vec3 noColor = glm::vec3(0.0f);
+    glm::vec3 *toggledColor = &color;
 
 public:
     Light();
@@ -32,5 +33,5 @@ public:
         GLuint ambientIntensityLocation,
         GLuint diffuseIntensityLocation);
     ShadowMap *getShadowMap() { return shadowMap; };
-    void toggle() { isOn = !isOn; }
+    void toggle() { toggledColor = toggledColor == &noColor ? &color : &noColor; }
 };

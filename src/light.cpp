@@ -26,15 +26,7 @@ void Light::useLight(
     GLuint ambientIntensityLocation,
     GLuint diffuseIntensityLocation)
 {
-    glUniform3f(colorLocation, color.x, color.y, color.z);
-    if (isOn)
-    {
-        glUniform1f(ambientIntensityLocation, ambientIntensity);
-        glUniform1f(diffuseIntensityLocation, diffuseIntensity);
-    }
-    else
-    {
-        glUniform1f(ambientIntensityLocation, 0);
-        glUniform1f(diffuseIntensityLocation, 0);
-    }
+    glUniform3f(colorLocation, toggledColor->x, toggledColor->y, toggledColor->z);
+    glUniform1f(ambientIntensityLocation, ambientIntensity);
+    glUniform1f(diffuseIntensityLocation, diffuseIntensity);
 }

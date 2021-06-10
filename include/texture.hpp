@@ -2,7 +2,7 @@
 
 #include <GL/glew.h>
 
-#include <stb_image.h>
+#include "constants.hpp"
 
 class Texture
 {
