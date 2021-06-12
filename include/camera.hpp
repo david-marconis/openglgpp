@@ -39,5 +39,7 @@ public:
 
     glm::vec3 getCameraPosition() { return position; }
     glm::vec3 getCameraDirection() { return glm::normalize(front); }
+    GLfloat getPitch() { return pitch; }
+    GLfloat getYaw() { return yaw; }
     glm::mat4 calculateViewMatrix();
 };

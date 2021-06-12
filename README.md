@@ -4,7 +4,7 @@
 mkdir build
 cd build
 conan install ..
-cmake .. -D MAIN_CLASS=projection.cpp
+cmake ..
 cmake --build .
 
 #Run
