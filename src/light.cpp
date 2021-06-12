@@ -3,6 +3,7 @@
 Light::Light()
 {
     color = glm::vec3(1.0f, 1.0f, 1.0f);
+    toggledColor = color;
     ambientIntensity = 1;
     diffuseIntensity = 0.0f;
 }
@@ -15,6 +16,7 @@ Light::Light(
     GLfloat shadowHeight)
 {
     this->color = color;
+    toggledColor = color;
     this->ambientIntensity = ambientIntensity;
     this->diffuseIntensity = diffuseIntensity;
     this->shadowMap = new ShadowMap();
@@ -26,7 +28,7 @@ void Light::useLight(
     GLuint ambientIntensityLocation,
     GLuint diffuseIntensityLocation)
 {
-    glUniform3f(colorLocation, toggledColor->x, toggledColor->y, toggledColor->z);
+    glUniform3f(colorLocation, toggledColor.x, toggledColor.y, toggledColor.z);
     glUniform1f(ambientIntensityLocation, ambientIntensity);
     glUniform1f(diffuseIntensityLocation, diffuseIntensity);
 }

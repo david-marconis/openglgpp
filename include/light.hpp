@@ -10,12 +10,12 @@ class Light
 {
 protected:
     glm::vec3 color;
+    glm::vec3 toggledColor;
+    glm::vec3 noColor = glm::vec3(0.0f);
     GLfloat ambientIntensity;
     GLfloat diffuseIntensity;
     ShadowMap *shadowMap;
     glm::mat4 lightProjection;
-    glm::vec3 noColor = glm::vec3(0.0f);
-    glm::vec3 *toggledColor = &color;
 
 public:
     Light();
@@ -33,5 +33,5 @@ public:
         GLuint ambientIntensityLocation,
         GLuint diffuseIntensityLocation);
     ShadowMap *getShadowMap() { return shadowMap; };
-    void toggle() { toggledColor = toggledColor == &noColor ? &color : &noColor; }
+    void toggle() { toggledColor = toggledColor == color ? noColor : color; }
 };
