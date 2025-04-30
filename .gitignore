@@ -85,4 +85,7 @@ conanbuildinfo.*
 conaninfo.txt
 graph_info.json
 
+# Python venv
+.venv
+
 # End of https://www.toptal.com/developers/gitignore/api/conan,cmake
