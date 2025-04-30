@@ -1,3 +1,5 @@
+# OpenGL playground
+![image](https://github.com/user-attachments/assets/27635352-8284-47c6-9ae2-06abc0242317)
 # Install and run
 Requires Conan and Cmake to run. The following code install cmake using apt and Conan using pip in a virtual env.
 ```bash
